@@ -26,6 +26,17 @@ client.connect(3, function() {
     });
   });
 
+  www.post('/github', function(request, response) {
+    client.say('#gds-performance', 'Github POSTd');
+    
+    request.on('data', function(d) {
+      if (d) { console.log(d.toString('utf8')); }
+    });
+    request.on('close', function() {
+      response.end();
+    });
+  });
+
   www.listen(9876);
 
 });
