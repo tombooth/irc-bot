@@ -6,7 +6,7 @@ var irc = require('irc'),
 
 /**
  * Should come out like
- * Data In: Notify on 5xx errors (finished)
+ * Data In: Notify on 5xx errors (Ralph Cowling finished)
  * http://www.pivotaltracker.com/story/show/55989114
  */
 var parsePivotal = function(json){
@@ -16,10 +16,12 @@ var parsePivotal = function(json){
     ": ",
     m.changes[0].name,
     " (",
+    m.performed_by.name,
+    " ",
     m.highlight,
     ")",
     ". ",
-    m.primary_resources[0].url
+    m.primary_resources[0].url,
   ].join('');
 
   return message;
