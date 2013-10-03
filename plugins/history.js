@@ -8,7 +8,11 @@ module.exports = function(config, irc, www) {
     return;
   }
 
-  var outStream = fs.createWriteStream(process.cwd() + '/' + config.path, { encoding: 'utf8' });
+  var outStream = fs.createWriteStream(
+    process.cwd() + '/' + config.path, { 
+      encoding: 'utf8',
+      flags: 'a'
+    });
 
   irc.addListener('message', function(nick, to, text, message) {
     
