@@ -1,0 +1,13 @@
+{
+  "irc": {
+    "host": "chat.freenode.net",
+    "nick": "",
+    "nick_password": "",
+    "channel": "",
+    "channel_password": ""
+  },
+  "www": {
+    "port": 8080
+  },
+  "plugins": { }
+}
