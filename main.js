@@ -45,11 +45,24 @@ client.connect(3, function() {
   www.use(express.bodyParser());
 
   if (config.plugins) {
-    Object.keys(config.plugins).forEach(function(pluginName) {
-      console.log('Registering ' + pluginName + '...');
-      require(process.cwd() + '/plugins/' + pluginName + '.js')(config.plugins[pluginName], client, www);
-      console.log('Registered.');
-    });
+    var pluginNames = Object.keys(config.plugins);
+    function registerPlugin(i) { 
+      if (i >= pluginNames.length) return;
+      else {
+        var pluginName = pluginNames[i],
+            plugin;
+
+        console.log('Registering ' + pluginName + '...');
+
+        plugin = require(process.cwd() + '/plugins/' + pluginName + '.js')
+        plugin(config.plugins[pluginName], client, www, function() {
+          console.log('Registered.');
+          registerPlugin(++i);
+        });
+      }
+    }
+
+    registerPlugin(0);
   }
 
   www.listen(config.www.port || 80);

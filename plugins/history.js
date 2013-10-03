@@ -1,7 +1,7 @@
 
 var fs = require('fs');
 
-module.exports = function(config, irc, www) {
+module.exports = function(config, irc, www, done) {
 
   if (!config.path) {
     console.error('You need to provide out_path on the config for this plugin, relative to the CWD.');
@@ -26,6 +26,8 @@ module.exports = function(config, irc, www) {
     outStream.write(log + '\n', 'utf8');
 
   });
+
+  done();
 
 };
 

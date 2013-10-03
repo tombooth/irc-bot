@@ -21,7 +21,7 @@ var parsePivotal = function(json){
   return message;
 }
 
-module.exports = function(config, irc, www) {
+module.exports = function(config, irc, www, done) {
 
   var allowedHighlights = config.allow;
 
@@ -40,5 +40,7 @@ module.exports = function(config, irc, www) {
 
     response.end();
   });
+
+  done();
 
 };

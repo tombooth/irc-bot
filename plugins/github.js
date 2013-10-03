@@ -8,4 +8,6 @@ module.exports = function(config, irc, www) {
     console.log(request.body);
   });
 
+  done();
+
 };
