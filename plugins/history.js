@@ -23,7 +23,7 @@ module.exports = function(config, irc, www) {
       message: message
     });
 
-    outStream.write(log, 'utf8');
+    outStream.write(log + '\n', 'utf8');
 
   });
 
