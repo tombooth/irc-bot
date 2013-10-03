@@ -23,8 +23,21 @@ var parsePivotal = function(json){
 
 module.exports = function(config, irc, www) {
 
+  var allowedHighlights = config.allow;
+
   www.post('/pivotal', function(request, response) {
-    irc.say(parsePivotal(request.body));
+    var json = request.body;
+
+    if (json) {
+      if (!allowedHighlights || allowedHighlights.indexOf(json.highlight) >= 0) {
+	irc.say(parsePivotal(request.body));
+      } else {
+        console.log('Pivotal update rejected: ' + json.highlight);
+      }
+    } else {
+      console.log('Bad pivotal request');
+    }
+
     response.end();
   });
 
