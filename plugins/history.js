@@ -1,7 +1,7 @@
 
 var fs = require('fs');
 
-module.exports = function(config, irc, www, done) {
+module.exports = function(config, bot, done) {
 
   if (!config.path) {
     console.error('You need to provide out_path on the config for this plugin, relative to the CWD.');
@@ -14,7 +14,7 @@ module.exports = function(config, irc, www, done) {
       flags: 'a'
     });
 
-  irc.addListener('message', function(nick, to, text, message) {
+  bot.ircClient.addListener('message', function(nick, to, text, message) {
     
     var log = JSON.stringify({
       nick: nick,

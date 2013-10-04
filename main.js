@@ -36,36 +36,16 @@ client.connect(3, function() {
     (config.irc.channel_password ? (' ' + config.irc.channel_password) : ''));
   console.log('Joined channel.');
 
-  var say = client.say;
-  client.say = function(message) { say.call(client, config.irc.channel, message); };
-
   var express = require('express'),
       www = express();
 
   www.use(express.bodyParser());
-
-  if (config.plugins) {
-    var pluginNames = Object.keys(config.plugins);
-    function registerPlugin(i) { 
-      if (i >= pluginNames.length) return;
-      else {
-        var pluginName = pluginNames[i],
-            plugin;
-
-        console.log('Registering ' + pluginName + '...');
-
-        plugin = require(process.cwd() + '/plugins/' + pluginName + '.js')
-        plugin(config.plugins[pluginName], client, www, function() {
-          console.log('Registered.');
-          registerPlugin(++i);
-        });
-      }
-    }
-
-    registerPlugin(0);
-  }
-
   www.listen(config.www.port || 80);
+
+  var Bot = require('./bot.js'),
+      bot = new Bot(client, config.irc.channel, www);
+
+  if (config.plugins) bot.registerPlugins(config.plugins);
 
 });
 

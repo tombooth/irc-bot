@@ -86,7 +86,7 @@ function setupHooks(username, password, repos, host, done) {
 
 }
 
-module.exports = function(config, irc, www, done) {
+module.exports = function(config, bot, done) {
 
   if (!config.repos || config.repos.length === 0) {
     console.error('No repos defined so exiting early');
@@ -99,16 +99,16 @@ module.exports = function(config, irc, www, done) {
     });
   });
 
-  www.post('/github', function(request, response) {
+  bot.www.post('/github', function(request, response) {
     var json = request.body;
 
     console.log(json);
 
     if(json){
       if(json.pusher)
-        irc.say(gitty.parser.parsePush(json));
+        bot.say(gitty.parser.parsePush(json));
       if(json.pull_request)
-        irc.say(gitty.parser.parsePullReq(json));
+        bot.say(gitty.parser.parsePullReq(json));
     }
 
   });

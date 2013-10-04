@@ -21,16 +21,16 @@ var parsePivotal = function(json){
   return message;
 }
 
-module.exports = function(config, irc, www, done) {
+module.exports = function(config, bot, done) {
 
   var allowedHighlights = config.allow;
 
-  www.post('/pivotal', function(request, response) {
+  bot.www.post('/pivotal', function(request, response) {
     var json = request.body;
 
     if (json) {
       if (!allowedHighlights || allowedHighlights.indexOf(json.highlight) >= 0) {
-	irc.say(parsePivotal(request.body));
+	bot.say(parsePivotal(request.body));
       } else {
         console.log('Pivotal update rejected: ' + json.highlight);
       }
