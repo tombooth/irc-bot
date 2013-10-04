@@ -19,22 +19,31 @@ var gitty = {};
 gitty.parser = {
 
   parsePullReq: function(json){
-    var pullReq = json.pull_request;
+    var pullReq = json.pull_request,
+        mergable = json.mergeable ? '(Mergable)' : '';
     message = [
+      'Pull request ',
+      '[',
+      json.action,
+      '] ',
       pullReq.base.repo.name,
       ": ",
       pullReq.user.login,
       " - ",
       pullReq.title,
       " ",
-      pullReq.url
+      pullReq.html_url,
+      " ",
+      mergable
     ].join('');
 
     return message;
   },
   parsePush: function(json){
+    var ref = json.ref.split('/').pop();
     message = [
       json.repository.name,
+      " [",ref,"]",
       ": ",
       json.pusher.name,
       " - ",
