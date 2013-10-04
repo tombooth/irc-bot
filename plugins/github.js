@@ -25,7 +25,7 @@ gitty.parser = {
       ": ",
       pullReq.user.login,
       " - ",
-      pullReq.body,
+      pullReq.title,
       " ",
       pullReq.url
     ].join('');
