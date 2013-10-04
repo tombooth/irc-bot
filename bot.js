@@ -3,13 +3,16 @@ var util = require('util'),
     events = require('events');
 
 
-function Bot(ircClient, ircChannel, www) {
+function Bot(ircClient, ircNick, ircChannel, www) {
 
   events.EventEmitter.call(this);
  
   this.ircClient = ircClient;
+  this.ircNick = ircNick;
   this.ircChannel = ircChannel;
   this.www = www;
+
+  this.ircClient.on('message', this._listenForMe.bind(this));
 
 }
 
@@ -42,6 +45,15 @@ Bot.prototype.registerPlugins = function(pluginConfig) {
 
 Bot.prototype.say = function(message) {
   this.ircClient.say(this.ircChannel, message);
+};
+
+
+
+Bot.prototype._listenForMe = function(nick, to, text, message) {
+  if (text.indexOf(this.ircNick) >= 0) {
+    console.log(text);
+    this.say(nick + ', I heard that!');
+  }
 };
 
 

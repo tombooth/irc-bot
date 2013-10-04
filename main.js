@@ -43,7 +43,12 @@ client.connect(3, function() {
   www.listen(config.www.port || 80);
 
   var Bot = require('./bot.js'),
-      bot = new Bot(client, config.irc.channel, www);
+      bot = new Bot(
+        client,
+        config.irc.nick,
+        config.irc.channel,
+        www
+      );
 
   if (config.plugins) bot.registerPlugins(config.plugins);
 
