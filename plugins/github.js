@@ -2,7 +2,6 @@
 var read = require('read'),
     GitHubApi = require('github');
 
-var gitty = {};
 
 /**
  * Parse the github post-receive hook
@@ -10,19 +9,42 @@ var gitty = {};
    * "testing: Garen Torikian -
    * Rename madame-bovary.txt to words/madame-bovary.txt
    * https://github.com/octokitty/testing/commit/1481a2de7b2a7d02428ad93446ab166be7793fbb"
+   * and
+   * "Hello-World: octocat - Please pull these awesome changes
+   * https://api.github.com/octocat/Hello-World/pulls/1"
  */
-gitty.parser = function(json){
-  message = [
-    json.repository.name,
-    ": ",
-    json.pusher.name,
-    " - ",
-    json.head_commit.message,
-    " ",
-    json.head_commit.url
-  ].join('');
 
-  return message;
+var gitty = {};
+
+gitty.parser = {
+
+  parsePullReq: function(json){
+    var pullReq = json.pull_request;
+    message = [
+      pullReq.base.repo.name,
+      ": ",
+      pullReq.user.login,
+      " - ",
+      pullReq.body,
+      " ",
+      pullReq.url
+    ].join('');
+
+    return message;
+  },
+  parsePush: function(json){
+    message = [
+      json.repository.name,
+      ": ",
+      json.pusher.name,
+      " - ",
+      json.head_commit.message,
+      " ",
+      json.head_commit.url
+    ].join('');
+
+    return message;
+  }
 }
 
 function setupHook(user, repo, done) {
@@ -82,8 +104,11 @@ module.exports = function(config, irc, www, done) {
 
     console.log(json);
 
-    if(json && json.pusher){
-      irc.say(gitty.parser(json));
+    if(json){
+      if(json.pusher)
+        irc.say(gitty.parser.parsePush(json));
+      if(json.pull_request)
+        irc.say(gitty.parser.parsePullReq(json));
     }
 
   });
