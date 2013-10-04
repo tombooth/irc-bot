@@ -20,8 +20,12 @@ gitty.parser = {
 
   parsePullReq: function(json){
     var pullReq = json.pull_request,
-	mergable = json.mergeable ? '(Mergable)' : '';
+        mergable = json.mergeable ? '(Mergable)' : '';
     message = [
+      'Pull request ',
+      '[',
+      json.action,
+      '] ',
       pullReq.base.repo.name,
       ": ",
       pullReq.user.login,
