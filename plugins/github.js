@@ -2,6 +2,29 @@
 var read = require('read'),
     GitHubApi = require('github');
 
+var gitty = {};
+
+/**
+ * Parse the github post-receive hook
+ * Should read like:
+   * "testing: Garen Torikian -
+   * Rename madame-bovary.txt to words/madame-bovary.txt
+   * https://github.com/octokitty/testing/commit/1481a2de7b2a7d02428ad93446ab166be7793fbb"
+ */
+gitty.parser = function(json){
+  message = [
+    json.repository.name,
+    ": ",
+    json.pusher.name,
+    " - ",
+    json.head_commit.message,
+    " ",
+    json.head_commit.url
+  ].join('');
+
+  return message;
+}
+
 function setupHook(user, repo, done) {
 }
 
@@ -17,9 +40,9 @@ function setupHooks(username, password, repos, host, done) {
       var splitRepo = splitRepos[i],
           user = splitRepo[0],
           repo = splitRepo[1];
- 
+
       console.log('Setting up GitHub hooks for ' + user + '/' + repo);
-      
+
           github.repos.createHook({
             user: user,
             repo: repo,
@@ -49,7 +72,7 @@ module.exports = function(config, irc, www, done) {
   }
 
   read({ prompt: 'GitHub username: ' }, function(err, username) {
-    read({ prompt: 'GitHub password: ', silent: true }, function(err, password) { 
+    read({ prompt: 'GitHub password: ', silent: true }, function(err, password) {
       setupHooks(username, password, config.repos, config.host, done);
     });
   });
@@ -58,6 +81,11 @@ module.exports = function(config, irc, www, done) {
     var json = request.body;
 
     console.log(json);
+
+    if(json && json.pusher){
+      irc.say(gitty.parser(json));
+    }
+
   });
 
 };
