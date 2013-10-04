@@ -13,6 +13,9 @@ function Bot(ircClient, ircNick, ircChannel, www) {
   this.www = www;
 
   this.ircClient.on('message', this._listenForMe.bind(this));
+  this.ircClient.on('pm', this.emit.bind(this, 'to-bot'));
+
+  this.on('to-bot', this._matchMessageHandler.bind(this));
 
 }
 
@@ -48,11 +51,13 @@ Bot.prototype.say = function(message) {
 };
 
 
+Bot.prototype._matchMessageHandler = function(nick, text, message) {
+  this.say(nick + ', I heard that!');
+};
 
 Bot.prototype._listenForMe = function(nick, to, text, message) {
   if (text.indexOf(this.ircNick) >= 0) {
-    console.log(text);
-    this.say(nick + ', I heard that!');
+    this.emit('to-bot', nick, text, message);
   }
 };
 
