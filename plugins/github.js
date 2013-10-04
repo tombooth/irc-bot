@@ -65,20 +65,20 @@ function setupHooks(username, password, repos, host, done) {
 
       console.log('Setting up GitHub hooks for ' + user + '/' + repo);
 
-          github.repos.createHook({
-            user: user,
-            repo: repo,
-            name: 'web',
-            config: {
-              "url": host + "/github",
-              "content_type": "json"
-            },
-            events: ['push', 'issues', 'issue_comment', 'commit_comment', 'pull_request', 'pull_request_review_comment', 'gollum', 'watch', 'release', 'fork', 'member', 'public', 'team_add', 'status' ],
-            active: true,
-          }, function(err, back) {
-            console.log(err ? 'Hook exists' : 'Added hook');
-            setupHook(++i);
-          });
+      github.repos.createHook({
+        user: user,
+        repo: repo,
+        name: 'web',
+        config: {
+          "url": host + "/github",
+          "content_type": "json"
+        },
+        events: ['push', 'issues', 'issue_comment', 'commit_comment', 'pull_request', 'pull_request_review_comment', 'gollum', 'watch', 'release', 'fork', 'member', 'public', 'team_add', 'status' ],
+        active: true,
+      }, function(err, back) {
+        console.log(err ? 'Hook exists' : 'Added hook');
+        setupHook(++i);
+      });
     }
   }
 
@@ -101,8 +101,6 @@ module.exports = function(config, bot, done) {
 
   bot.www.post('/github', function(request, response) {
     var json = request.body;
-
-    console.log(json);
 
     if(json){
       if(json.pusher)
