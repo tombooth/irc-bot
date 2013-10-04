@@ -36,8 +36,10 @@ gitty.parser = {
     return message;
   },
   parsePush: function(json){
+    var ref = json.ref.split('/').pop();
     message = [
       json.repository.name,
+      " [",ref,"]",
       ": ",
       json.pusher.name,
       " - ",
