@@ -28,7 +28,9 @@ gitty.parser = {
       " - ",
       pullReq.title,
       " ",
-      pullReq.url
+      pullReq.html_url,
+      " ",
+      mergable
     ].join('');
 
     return message;
