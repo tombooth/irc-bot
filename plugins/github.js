@@ -59,11 +59,8 @@ gitty.parser = {
 function setupHook(user, repo, done) {
 }
 
-function setupHooks(username, password, repos, host, done) {
-  var splitRepos = repos.map(function(name) { return name.split('/'); }),
-      github = new GitHubApi({ version: "3.0.0" });
-
-  github.authenticate({ username: username, password: password, type: 'basic' });
+function setupHooks(github, repos, host, done) {
+  var splitRepos = repos.map(function(name) { return name.split('/'); });
 
   function setupHook(i) {
     if (i >= splitRepos.length) done();
@@ -102,11 +99,20 @@ module.exports = function(config, bot, done) {
     done();
   }
 
-  read({ prompt: 'GitHub username: ' }, function(err, username) {
-    read({ prompt: 'GitHub password: ', silent: true }, function(err, password) {
-      setupHooks(username, password, config.repos, config.host, done);
+  var github = new GitHubApi({ version: "3.0.0" });
+
+  if (!config.token) {
+    read({ prompt: 'GitHub username: ' }, function(err, username) {
+      read({ prompt: 'GitHub password: ', silent: true }, function(err, password) {
+        github.authenticate({ username: username, password: password, type: 'basic' });
+        setupHooks(github, config.repos, config.host, done);
+      });
     });
-  });
+  } else {
+    console.log("Authenticating with OAuth token");
+    github.authenticate({ type: 'oauth', token: config.token });
+    setupHooks(github, config.repos, config.host, done);
+  }
 
   bot.www.post('/github', function(request, response) {
     var json = request.body;
