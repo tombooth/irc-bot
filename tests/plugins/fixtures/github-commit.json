@@ -1,0 +1,83 @@
+{
+ "ref": "refs/heads/master",
+ "after": "8ecbbfe71de3660b28c9ad8c85ed7eec91cec3ca",
+ "before": "3381b2e018109c27ba184e27f2e8a6e8eb464009",
+ "created": false,
+ "deleted": false,
+ "forced": false,
+ "compare": "https://github.com/tombooth/irc-bot/compare/3381b2e01810...8ecbbfe71de3",
+ "commits": [
+  {
+   "id": "8ecbbfe71de3660b28c9ad8c85ed7eec91cec3ca",
+   "distinct": true,
+   "message": "Enable travis for project",
+   "timestamp": "2013-10-06T07:15:29-07:00",
+   "url": "https://github.com/tombooth/irc-bot/commit/8ecbbfe71de3660b28c9ad8c85ed7eec91cec3ca",
+   "author": [
+    null
+   ],
+   "committer": [
+    null
+   ],
+   "added": [
+    null
+   ],
+   "removed": [],
+   "modified": [
+    null
+   ]
+  }
+ ],
+ "head_commit": {
+  "id": "8ecbbfe71de3660b28c9ad8c85ed7eec91cec3ca",
+  "distinct": true,
+  "message": "Enable travis for project",
+  "timestamp": "2013-10-06T07:15:29-07:00",
+  "url": "https://github.com/tombooth/irc-bot/commit/8ecbbfe71de3660b28c9ad8c85ed7eec91cec3ca",
+  "author": {
+   "name": "Tom Booth",
+   "email": "tombooth@gmail.com",
+   "username": "tombooth"
+  },
+  "committer": {
+   "name": "Tom Booth",
+   "email": "tombooth@gmail.com",
+   "username": "tombooth"
+  },
+  "added": [
+   ".travis.yml"
+  ],
+  "removed": [],
+  "modified": [
+   "README.md"
+  ]
+ },
+ "repository": {
+  "id": 13275260,
+  "name": "irc-bot",
+  "url": "https://github.com/tombooth/irc-bot",
+  "description": "",
+  "watchers": 0,
+  "stargazers": 0,
+  "forks": 1,
+  "fork": false,
+  "size": 188,
+  "owner": {
+   "name": "tombooth",
+   "email": "tombooth@users.noreply.github.com"
+  },
+  "private": false,
+  "open_issues": 0,
+  "has_issues": true,
+  "has_downloads": true,
+  "has_wiki": true,
+  "language": "JavaScript",
+  "created_at": 1380728732,
+  "pushed_at": 1381068938,
+  "master_branch": "master"
+ },
+ "pusher": {
+  "name": "tombooth",
+  "email": "tombooth@users.noreply.github.com"
+ }
+}

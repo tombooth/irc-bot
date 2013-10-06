@@ -20,7 +20,7 @@ gitty.parser = {
 
   parsePullReq: function(json){
     var pullReq = json.pull_request,
-        mergable = json.mergeable ? '(Mergable)' : '';
+        mergable = json.mergeable ? ' (Mergable)' : '';
     message = [
       'Pull request ',
       '[',
@@ -33,7 +33,6 @@ gitty.parser = {
       pullReq.title,
       " ",
       pullReq.html_url,
-      " ",
       mergable
     ].join('');
 
@@ -56,10 +55,10 @@ gitty.parser = {
   }
 }
 
-function setupHook(user, repo, done) {
-}
-
 function setupHooks(github, repos, host, done) {
+
+  if (!repos || repos.length === 0) { done(); return; }
+
   var splitRepos = repos.map(function(name) { return name.split('/'); });
 
   function setupHook(i) {
@@ -94,11 +93,6 @@ function setupHooks(github, repos, host, done) {
 
 module.exports = function(config, bot, done) {
 
-  if (!config.repos || config.repos.length === 0) {
-    console.error('No repos defined so exiting early');
-    done();
-  }
-
   var github = new GitHubApi({ version: "3.0.0" });
 
   if (!config.token) {
@@ -123,6 +117,8 @@ module.exports = function(config, bot, done) {
       if(json.pull_request)
         bot.say(gitty.parser.parsePullReq(json));
     }
+
+    response.end();
 
   });
 

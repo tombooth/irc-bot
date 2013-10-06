@@ -14,7 +14,7 @@
     "sinon": "~1.7.3"
   },
   "scripts": {
-    "test": "node_modules/nodeunit/bin/nodeunit tests/"
+    "test": "node_modules/nodeunit/bin/nodeunit tests/ tests/plugins/"
   },
   "repository": "",
   "author": "",
