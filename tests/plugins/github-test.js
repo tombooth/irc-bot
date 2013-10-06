@@ -1,25 +1,19 @@
 
 var sinon = require('sinon'),
     fs = require('fs'),
+    testUtil = require('../util.js'),
     githubPlugin = require('../../src/plugins/github.js');
 
 
 var commitJSON = JSON.parse(fs.readFileSync(__dirname + '/fixtures/github-commit.json')),
     pullreqJSON = JSON.parse(fs.readFileSync(__dirname + '/fixtures/github-pullreq.json')),
-    response = { end: function() { } },
     bot;
 
 
 
 exports.setUp = function(done) {
 
-  bot = {
-    www: {
-      post: sinon.stub()
-    },
-    say: sinon.stub()
-  };
-
+  bot = testUtil.mockBot();
   done();
 
 };
@@ -39,10 +33,7 @@ exports.testCommit = function(test) {
 
   githubPlugin({ token: 'foo' }, bot, function() { });
 
-  var webhookHandler = bot.www.post.getCall(0).args[1],
-      request = { body: commitJSON };
-
-  webhookHandler(request, response);
+  testUtil.webHookRequest(bot, { body: commitJSON });
 
   test.ok( bot.say.calledOnce );
   test.equal( bot.say.getCall(0).args[0],
@@ -56,10 +47,7 @@ exports.testPullRequest = function(test) {
 
   githubPlugin({ token: 'foo' }, bot, function() { });
 
-  var webhookHandler = bot.www.post.getCall(0).args[1],
-      request = { body: pullreqJSON };
-
-  webhookHandler(request, response);
+  testUtil.webHookRequest(bot, { body: pullreqJSON });
 
   test.ok( bot.say.calledOnce );
   test.equal( bot.say.getCall(0).args[0],

@@ -1,0 +1,43 @@
+{
+"performed_by": {
+"kind": "person",
+"id": 1092772,
+"initials": "TB",
+"name": "Tom Booth"
+},
+"project": {
+"kind": "project",
+"id": 911872,
+"name": "Data In"
+},
+"primary_resources": [
+{
+"story_type": "feature",
+"kind": "story",
+"id": 55989114,
+"url": "http://www.pivotaltracker.com/story/show/55989114",
+"name": "Notify on 5xx errors"
+}
+],
+"guid": "911872_251",
+"kind": "story_update_activity",
+"project_version": 251,
+"highlight": "finished",
+"message": "Tom Booth finished this feature",
+"occurred_at": 1381092567000,
+"changes": [
+{
+"story_type": "feature",
+"new_values": [
+null
+],
+"kind": "story",
+"change_type": "update",
+"id": 55989114,
+"original_values": [
+null
+],
+"name": "Notify on 5xx errors"
+}
+]
+}
