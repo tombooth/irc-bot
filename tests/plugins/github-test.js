@@ -22,8 +22,8 @@ exports.testBinding = function(test) {
 
   githubPlugin({ token: 'foo' }, bot, function() { });
 
-  test.ok( bot.www.post.calledOnce );
-  test.ok( bot.www.post.getCall(0).calledWith('/github') );
+  test.ok( bot.registerWebHook.calledOnce );
+  test.ok( bot.registerWebHook.getCall(0).calledWith('/github') );
 
   test.done();
 
@@ -33,7 +33,7 @@ exports.testCommit = function(test) {
 
   githubPlugin({ token: 'foo' }, bot, function() { });
 
-  testUtil.webHookRequest(bot, { body: commitJSON });
+  testUtil.webHookBodyRequest(bot, commitJSON);
 
   test.ok( bot.say.calledOnce );
   test.equal( bot.say.getCall(0).args[0],
@@ -47,7 +47,7 @@ exports.testPullRequest = function(test) {
 
   githubPlugin({ token: 'foo' }, bot, function() { });
 
-  testUtil.webHookRequest(bot, { body: pullreqJSON });
+  testUtil.webHookBodyRequest(bot, pullreqJSON);
 
   test.ok( bot.say.calledOnce );
   test.equal( bot.say.getCall(0).args[0],

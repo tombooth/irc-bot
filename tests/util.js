@@ -23,6 +23,7 @@ module.exports = {
     return {
       www: mockWWW(),
       ircClient: mockIRC(),
+      registerWebHook: sinon.stub(),
       say: sinon.stub()
     };
   },
@@ -34,6 +35,11 @@ module.exports = {
     webhookHandler(request, response);
 
     return response;
+  },
+
+  webHookBodyRequest: function(bot, body) {
+    var handler = bot.registerWebHook.getCall(0).args[1];
+    handler(body);
   }
 
 };

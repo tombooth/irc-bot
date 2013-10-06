@@ -22,8 +22,8 @@ exports.testBinding = function(test) {
 
   pivotalPlugin({ }, bot, function() { });
 
-  test.ok( bot.www.post.calledOnce );
-  test.ok( bot.www.post.getCall(0).calledWith('/pivotal') );
+  test.ok( bot.registerWebHook.calledOnce );
+  test.ok( bot.registerWebHook.getCall(0).calledWith('/pivotal') );
 
   test.done();
 
@@ -33,7 +33,7 @@ exports.testChange = function(test) {
 
   pivotalPlugin({ }, bot, function() { });
 
-  testUtil.webHookRequest(bot, { body: finishedJSON });
+  testUtil.webHookBodyRequest(bot, finishedJSON);
 
   test.ok( bot.say.calledOnce );
   test.equal( bot.say.getCall(0).args[0],
@@ -47,8 +47,8 @@ exports.testChangeAllowed = function(test) {
 
   pivotalPlugin({ allow: ['started'] }, bot, function() { });
 
-  testUtil.webHookRequest(bot, { body: finishedJSON });
-  testUtil.webHookRequest(bot, { body: startedJSON });
+  testUtil.webHookBodyRequest(bot, finishedJSON);
+  testUtil.webHookBodyRequest(bot, startedJSON);
 
   test.ok( bot.say.calledOnce );
   test.equal( bot.say.getCall(0).args[0],

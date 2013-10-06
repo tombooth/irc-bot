@@ -25,12 +25,11 @@ module.exports = function(config, bot, done) {
 
   var allowedHighlights = config.allow;
 
-  bot.www.post('/pivotal', function(request, response) {
-    var json = request.body;
+  bot.registerWebHook('/pivotal', function(json) {
 
     if (json) {
       if (!allowedHighlights || allowedHighlights.indexOf(json.highlight) >= 0) {
-	bot.say(parsePivotal(request.body));
+	bot.say(parsePivotal(json));
       } else {
         console.log('Pivotal update rejected: ' + json.highlight);
       }
@@ -38,7 +37,6 @@ module.exports = function(config, bot, done) {
       console.log('Bad pivotal request');
     }
 
-    response.end();
   });
 
   done();

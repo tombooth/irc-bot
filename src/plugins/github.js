@@ -108,8 +108,7 @@ module.exports = function(config, bot, done) {
     setupHooks(github, config.repos, config.host, done);
   }
 
-  bot.www.post('/github', function(request, response) {
-    var json = request.body;
+  bot.registerWebHook('/github', function(json) {
 
     if(json){
       if(json.pusher)
@@ -117,8 +116,6 @@ module.exports = function(config, bot, done) {
       if(json.pull_request)
         bot.say(gitty.parser.parsePullReq(json));
     }
-
-    response.end();
 
   });
 
