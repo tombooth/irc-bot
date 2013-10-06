@@ -1,6 +1,7 @@
 
 var util = require('util'),
     events = require('events'),
+    domain = require('domain'),
     fs = require('fs');
 
 
@@ -45,6 +46,37 @@ Bot.prototype.registerPlugins = function(pluginConfig) {
 
   registerPlugin(0);
 
+};
+
+Bot.prototype.registerWebHook = function(path, fn) {
+
+  this.www.post(path, function(request, response) {
+
+    var d = domain.create();
+
+    d.add(request);
+    d.add(response);
+
+    d.on('error', function(err) {
+      console.error('Web Hook Domain Error:', request.originalUrl);
+      console.error(request.query);
+      console.error(request.body);
+      console.error(err.stack);
+      response.end();
+    });
+
+    d.run(function() {
+      try {
+        fn(request.body);
+      } catch (err) {
+        console.error('Web Hook Run Error:', request.originalUrl);
+        console.error(request.body);
+        console.error(err.stack);
+      }
+      response.end();
+    });
+
+  });
 };
 
 Bot.prototype.say = function(message) {

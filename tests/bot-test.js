@@ -1,5 +1,6 @@
 
 var sinon = require('sinon'),
+    testUtil = require('./util.js'),
     Bot = require('../src/bot.js');
 
 var bot, fakePlugin, ircClient, wwwServer;
@@ -7,13 +8,8 @@ var bot, fakePlugin, ircClient, wwwServer;
 exports.setUp = function(done) {
 
   fakePlugin = sinon.stub();
-  ircClient = {
-    on: sinon.stub(),
-    say: sinon.stub()
-  };
-  wwwServer = {
-    post: sinon.stub()
-  };
+  ircClient = testUtil.mockIRC();
+  wwwServer = testUtil.mockWWW();
 
   Bot.PLUGINS = { "fake-plugin": fakePlugin };
   bot = new Bot(ircClient, 'nick', '#chan', wwwServer);
@@ -60,6 +56,38 @@ exports.testToBot = function(test) {
   test.ok( toBotHandler.calledTwice );
   test.ok( toBotHandler.getCall(0).calledWithExactly('foo', 'hello nick', null) );
   test.ok( toBotHandler.getCall(1).calledWithExactly('foo', 'hello', null) );
+
+  test.done();
+
+};
+
+exports.testRegisterWebHook = function(test) {
+
+  var hookStub = sinon.stub(),
+      json = { },
+      response;
+
+  bot.registerWebHook('/hook', hookStub);
+       
+  response = testUtil.webHookRequest(bot, { body: json });
+
+  test.ok( hookStub.calledOnce);
+  test.ok( hookStub.getCall(0).calledWithExactly(json) );
+  test.ok( response.end.calledOnce );
+
+  test.done();
+
+};
+
+exports.testRegisterWebHookExploding = function(test) {
+
+  bot.registerWebHook('/hook', function(json) {
+    throw new Error('exploded');
+  });
+
+  var response = testUtil.webHookRequest(bot, { body: { } });
+
+  test.ok( response.end.calledOnce );
 
   test.done();
 
