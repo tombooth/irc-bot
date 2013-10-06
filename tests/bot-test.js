@@ -43,7 +43,7 @@ exports.testSay = function(test) {
 
 exports.testToBot = function(test) {
 
-  var toBotHandler = sinon.stub()
+  var toBotHandler = sinon.stub(),
       allHandler = ircClient.on.getCall(0).args[1],
       pmHandler = ircClient.on.getCall(1).args[1];
 
@@ -54,8 +54,55 @@ exports.testToBot = function(test) {
   pmHandler('foo', 'hello', null);
 
   test.ok( toBotHandler.calledTwice );
-  test.ok( toBotHandler.getCall(0).calledWithExactly('foo', 'hello nick', null) );
-  test.ok( toBotHandler.getCall(1).calledWithExactly('foo', 'hello', null) );
+  test.ok( toBotHandler.getCall(0).calledWithExactly(
+        sinon.match.object, 'foo', 'hello nick', null) );
+  test.ok( toBotHandler.getCall(1).calledWithExactly(
+        sinon.match.object, 'foo', 'hello', null) );
+
+  test.done();
+
+};
+
+exports.testToBotReplyChannel = function(test) {
+
+  var toBotHandler = sinon.stub(),
+      allHandler = ircClient.on.getCall(0).args[1];
+
+  bot.on('to-bot', toBotHandler);
+
+  allHandler('foo', null, 'hello nick', null);
+
+  test.ok( toBotHandler.calledOnce );
+
+  channel = toBotHandler.getCall(0).args[0];
+  channel.say('hi!');
+
+  test.ok( ircClient.say.calledOnce );
+  test.ok( ircClient.say.getCall(0)
+      .calledWithExactly('#chan', 'hi!') );
+
+  test.done();
+
+};
+
+exports.testToBotReplyPM = function(test) {
+
+  var toBotHandler = sinon.stub(),
+      pmHandler = ircClient.on.getCall(1).args[1],
+      channel;
+
+  bot.on('to-bot', toBotHandler);
+
+  pmHandler('foo', 'hello nick', null);
+
+  test.ok( toBotHandler.calledOnce );
+
+  channel = toBotHandler.getCall(0).args[0];
+  channel.say('hi!');
+
+  test.ok( ircClient.say.calledOnce );
+  test.ok( ircClient.say.getCall(0)
+      .calledWithExactly('foo', 'hi!') );
 
   test.done();
 

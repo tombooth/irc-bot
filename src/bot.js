@@ -15,7 +15,7 @@ function Bot(ircClient, ircNick, ircChannel, www) {
   this.www = www;
 
   this.ircClient.on('message', this._listenForMe.bind(this));
-  this.ircClient.on('pm', this.emit.bind(this, 'to-bot'));
+  this.ircClient.on('pm', this._listenForPM.bind(this));
 
   this.on('to-bot', this._matchMessageHandler.bind(this));
 
@@ -84,14 +84,27 @@ Bot.prototype.say = function(message) {
 };
 
 
-Bot.prototype._matchMessageHandler = function(nick, text, message) {
-  this.say(nick + ', I heard that!');
+Bot.prototype._matchMessageHandler = function(chan, nick, text, message) {
 };
 
 Bot.prototype._listenForMe = function(nick, to, text, message) {
   if (text.indexOf(this.ircNick) >= 0) {
-    this.emit('to-bot', nick, text, message);
+    this.emit('to-bot',
+      { say: this.say.bind(this) },
+      nick,
+      text,
+      message
+    );
   }
+};
+
+Bot.prototype._listenForPM = function(nick, text, message) {
+  this.emit('to-bot',
+    { say: this.ircClient.say.bind(this.ircClient, nick) },
+    nick,
+    text,
+    message
+  );
 };
 
 Bot.PLUGINS = fs.readdirSync(__dirname + '/plugins')
