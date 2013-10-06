@@ -34,7 +34,7 @@ Bot.prototype.registerPlugins = function(pluginConfig) {
 
       console.log('Registering ' + pluginName + '...');
 
-      plugin = require(process.cwd() + '/plugins/' + pluginName + '.js')
+      plugin = require(__dirname + '/plugins/' + pluginName + '.js')
       plugin(pluginConfig[pluginName], bot, function() {
         console.log('Registered.');
         registerPlugin(++i);

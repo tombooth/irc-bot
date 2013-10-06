@@ -42,7 +42,7 @@ client.connect(3, function() {
   www.use(express.bodyParser());
   www.listen(config.www.port || 80);
 
-  var Bot = require('./bot.js'),
+  var Bot = require('./src/bot.js'),
       bot = new Bot(
         client,
         config.irc.nick,
