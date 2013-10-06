@@ -1,0 +1,43 @@
+{
+"primary_resources": [
+{
+"story_type": "feature",
+"id": 55989114,
+"url": "http://www.pivotaltracker.com/story/show/55989114",
+"name": "Notify on 5xx errors",
+"kind": "story"
+}
+],
+"changes": [
+{
+"new_values": [
+null
+],
+"story_type": "feature",
+"id": 55989114,
+"name": "Notify on 5xx errors",
+"original_values": [
+null
+],
+"kind": "story",
+"change_type": "update"
+}
+],
+"project": {
+"id": 911872,
+"name": "Data In",
+"kind": "project"
+},
+"project_version": 250,
+"performed_by": {
+"initials": "TB",
+"id": 1092772,
+"name": "Tom Booth",
+"kind": "person"
+},
+"occurred_at": 1381092556000,
+"guid": "911872_250",
+"kind": "story_update_activity",
+"highlight": "started",
+"message": "Tom Booth started this feature"
+}
