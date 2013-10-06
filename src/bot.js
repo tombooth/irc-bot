@@ -14,6 +14,8 @@ function Bot(ircClient, ircNick, ircChannel, www) {
   this.ircChannel = ircChannel;
   this.www = www;
 
+  this._messageHandlers = [ ];
+
   this.ircClient.on('message', this._listenForMe.bind(this));
   this.ircClient.on('pm', this._listenForPM.bind(this));
 
@@ -79,12 +81,31 @@ Bot.prototype.registerWebHook = function(path, fn) {
   });
 };
 
+Bot.prototype.registerMessageHandler = function(pattern, fn) {
+  this._messageHandlers.push({
+    pattern: pattern,
+    fn: fn
+  });
+};
+
 Bot.prototype.say = function(message) {
   this.ircClient.say(this.ircChannel, message);
 };
 
 
 Bot.prototype._matchMessageHandler = function(chan, nick, text, message) {
+
+  var messageHandler, match;
+
+  for (var i = 0; i < this._messageHandlers.length; i++) {
+    messageHandler = this._messageHandlers[i];
+    match = messageHandler.pattern.exec(text);
+
+    if (match) {
+      messageHandler.fn(chan, nick, text, match, message);
+    }
+  }
+
 };
 
 Bot.prototype._listenForMe = function(nick, to, text, message) {

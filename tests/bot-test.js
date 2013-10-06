@@ -140,4 +140,25 @@ exports.testRegisterWebHookExploding = function(test) {
 
 };
 
+exports.testRegisterMessageHandler = function(test) {
+
+  var handler = sinon.stub(),
+      allHandler = ircClient.on.getCall(0).args[1];
+
+  bot.registerMessageHandler(/foo/, handler);
+
+  allHandler('user', null, 'nick: foo', null);
+  allHandler('user', null, 'nick: foa', null);
+
+  test.ok( handler.calledOnce );
+  test.ok( handler.getCall(0).calledWithExactly(
+        sinon.match.object, 'user', 'nick: foo', sinon.match.array, null) );
+
+  test.done();
+
+};
+
+
+
+
 
