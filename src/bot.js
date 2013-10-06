@@ -1,6 +1,7 @@
 
 var util = require('util'),
-    events = require('events');
+    events = require('events'),
+    fs = require('fs');
 
 
 function Bot(ircClient, ircNick, ircChannel, www) {
@@ -34,7 +35,7 @@ Bot.prototype.registerPlugins = function(pluginConfig) {
 
       console.log('Registering ' + pluginName + '...');
 
-      plugin = require(__dirname + '/plugins/' + pluginName + '.js')
+      plugin = Bot.PLUGINS[pluginName];
       plugin(pluginConfig[pluginName], bot, function() {
         console.log('Registered.');
         registerPlugin(++i);
@@ -61,6 +62,13 @@ Bot.prototype._listenForMe = function(nick, to, text, message) {
   }
 };
 
+Bot.PLUGINS = fs.readdirSync(__dirname + '/plugins')
+                .filter(function(path) { return /.*\.js$/.test(path); })
+                .reduce(function(map, path) { 
+                  map[path.substring(0, path.length - 3)] = 
+                    require(__dirname + '/plugins/' + path);
+                  return map;
+                }, {});
 
 module.exports = Bot;
 
