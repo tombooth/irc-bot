@@ -7,20 +7,22 @@ var sinon = require('sinon'),
 
 var finishedJSON = JSON.parse(fs.readFileSync(__dirname + '/fixtures/pivotal-finished.json')),
     startedJSON = JSON.parse(fs.readFileSync(__dirname + '/fixtures/pivotal-started.json')),
-    bot;
+    iterationsJSON = JSON.parse(fs.readFileSync(__dirname + '/fixtures/pivotal-iterations.json')),
+    bot, config;
 
 
 
 exports.setUp = function(done) {
 
   bot = testUtil.mockBot();
+  config = { token: 't', projectId: 1 };
   done();
 
 };
 
 exports.testBinding = function(test) {
 
-  pivotalPlugin({ }, bot, function() { });
+  pivotalPlugin(config, bot, function() { });
 
   test.ok( bot.registerWebHook.calledOnce );
   test.ok( bot.registerWebHook.getCall(0).calledWith('/pivotal') );
@@ -31,7 +33,7 @@ exports.testBinding = function(test) {
 
 exports.testChange = function(test) {
 
-  pivotalPlugin({ }, bot, function() { });
+  pivotalPlugin(config, bot, function() { });
 
   testUtil.webHookBodyRequest(bot, finishedJSON);
 
@@ -45,7 +47,9 @@ exports.testChange = function(test) {
 
 exports.testChangeAllowed = function(test) {
 
-  pivotalPlugin({ allow: ['started'] }, bot, function() { });
+  config.allow = ['started'];
+
+  pivotalPlugin(config, bot, function() { });
 
   testUtil.webHookBodyRequest(bot, finishedJSON);
   testUtil.webHookBodyRequest(bot, startedJSON);
@@ -57,5 +61,38 @@ exports.testChangeAllowed = function(test) {
   test.done();
 
 };
+
+exports.testBacklogRetrieval = function(test) {
+
+  var pivotal = testUtil.mockPivotal(),
+      pluginInstance = new pivotalPlugin.Pivotal(bot, pivotal, config),
+      channel = { say: sinon.stub() },
+      messageHandler;
+
+  test.ok( bot.registerMessageHandler.calledOnce );
+
+  messageHandler = bot.registerMessageHandler.getCall(0).args[1];
+  messageHandler(channel);
+
+  test.ok( pivotal.getBacklogIterations.calledOnce );
+
+  pivotal.getBacklogIterations.getCall(0)
+    .callArgWith(2, null, iterationsJSON);
+
+  test.equals( channel.say.callCount, 46 );
+  test.equals( channel.say.getCall(0).args[0],
+      '2013/09/27 00:00:00 BST -> 2013/10/11 00:00:00 BST');
+  test.equals( channel.say.getCall(1).args[0],
+      '[57913332][accepted] Create a glossary for Backdrop technology http://www.pivotaltracker.com/story/show/57913332');
+
+  test.done();
+
+};
+
+
+
+
+
+
 
 

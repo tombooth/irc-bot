@@ -24,7 +24,15 @@ module.exports = {
       www: mockWWW(),
       ircClient: mockIRC(),
       registerWebHook: sinon.stub(),
+      registerMessageHandler: sinon.stub(),
       say: sinon.stub()
+    };
+  },
+
+  mockPivotal: function() {
+    return {
+      useToken: sinon.stub(),
+      getBacklogIterations: sinon.stub()
     };
   },
 
