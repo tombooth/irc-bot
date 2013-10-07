@@ -79,10 +79,10 @@ exports.testBacklogRetrieval = function(test) {
   pivotal.getCurrentBacklogIterations.getCall(0)
     .callArgWith(1, null, iterationsJSON);
 
-  test.equals( channel.say.callCount, 46 );
-  test.equals( channel.say.getCall(0).args[0],
+  test.ok( channel.say.calledOnce );
+  test.equals( channel.say.getCall(0).args[0][0],
       '2013/09/27 00:00:00 BST -> 2013/10/11 00:00:00 BST');
-  test.equals( channel.say.getCall(1).args[0],
+  test.equals( channel.say.getCall(0).args[0][1],
       '[57913332][accepted] Create a glossary for Backdrop technology http://www.pivotaltracker.com/story/show/57913332');
 
   test.done();
