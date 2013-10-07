@@ -74,10 +74,10 @@ exports.testBacklogRetrieval = function(test) {
   messageHandler = bot.registerMessageHandler.getCall(0).args[1];
   messageHandler(channel);
 
-  test.ok( pivotal.getBacklogIterations.calledOnce );
+  test.ok( pivotal.getCurrentBacklogIterations.calledOnce );
 
-  pivotal.getBacklogIterations.getCall(0)
-    .callArgWith(2, null, iterationsJSON);
+  pivotal.getCurrentBacklogIterations.getCall(0)
+    .callArgWith(1, null, iterationsJSON);
 
   test.equals( channel.say.callCount, 46 );
   test.equals( channel.say.getCall(0).args[0],

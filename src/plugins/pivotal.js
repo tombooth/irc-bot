@@ -22,8 +22,8 @@ function Pivotal(bot, pivotal, config) {
 
 Pivotal.prototype._listBacklog = function(channel) {
 
-  this._pivotal.getBacklogIterations(this._projectId,
-      { }, this._parseIterations.bind(this, channel));
+  this._pivotal.getCurrentBacklogIterations(this._projectId,
+      this._parseIterations.bind(this, channel));
 
 };
 
@@ -31,14 +31,14 @@ Pivotal.prototype._parseIterations = function(channel, err, json) {
 
   if (err || !json) console.error("Failed to parse iterations");
   else {
-    json.iterations.iteration.forEach(function(iteration) {
-      channel.say(iteration.start[0]['_'] + ' -> ' + iteration.finish[0]['_']);
+    json.iteration.forEach(function(iteration) {
+      channel.say(iteration.start + ' -> ' + iteration.finish);
 
-      iteration.stories[0].story.forEach(function(story) {
+      iteration.stories.story.forEach(function(story) {
         channel.say(
-          '[' + story.id[0]['_'] + ']' +
-          '[' + story.current_state[0] + '] ' + 
-          story.name[0] + ' ' + story.url[0]);
+          '[' + story.id + ']' +
+          '[' + story.current_state + '] ' + 
+          story.name + ' ' + story.url);
       });
     });
   }

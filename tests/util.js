@@ -32,7 +32,8 @@ module.exports = {
   mockPivotal: function() {
     return {
       useToken: sinon.stub(),
-      getBacklogIterations: sinon.stub()
+      getBacklogIterations: sinon.stub(),
+      getCurrentBacklogIterations: sinon.stub()
     };
   },
 
