@@ -89,7 +89,28 @@ Bot.prototype.registerMessageHandler = function(pattern, fn) {
 };
 
 Bot.prototype.say = function(message) {
-  this.ircClient.say(this.ircChannel, message);
+  this._say(this.ircChannel, message);
+};
+
+Bot.prototype._say = function(channel, message) {
+
+  if (!Array.isArray(message)) this.ircClient.say(channel, message);
+  else {
+
+    var say = this.ircClient.say.bind(this.ircClient);
+
+    function bufferedSend(i) {
+      if (i >= message.length) return;
+      else {
+        say(channel, message[i]);
+        setTimeout(bufferedSend.bind(this, i+1), 1000);
+      }
+    }
+
+    bufferedSend(0);
+
+  }
+
 };
 
 
@@ -121,7 +142,7 @@ Bot.prototype._listenForMe = function(nick, to, text, message) {
 
 Bot.prototype._listenForPM = function(nick, text, message) {
   this.emit('to-bot',
-    { say: this.ircClient.say.bind(this.ircClient, nick) },
+    { say: this._say.bind(this, nick) },
     nick,
     text,
     message

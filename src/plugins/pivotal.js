@@ -31,16 +31,20 @@ Pivotal.prototype._parseIterations = function(channel, err, json) {
 
   if (err || !json) console.error("Failed to parse iterations");
   else {
+    var out = [];
+
     json.iteration.forEach(function(iteration) {
-      channel.say(iteration.start + ' -> ' + iteration.finish);
+      out.push(iteration.start + ' -> ' + iteration.finish);
 
       iteration.stories.story.forEach(function(story) {
-        channel.say(
+        out.push(
           '[' + story.id + ']' +
           '[' + story.current_state + '] ' + 
           story.name + ' ' + story.url);
       });
     });
+
+    channel.say(out);
   }
 
 };
