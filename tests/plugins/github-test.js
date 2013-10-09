@@ -7,6 +7,7 @@ var sinon = require('sinon'),
 
 var commitJSON = JSON.parse(fs.readFileSync(__dirname + '/fixtures/github-commit.json')),
     pullreqJSON = JSON.parse(fs.readFileSync(__dirname + '/fixtures/github-pullreq.json')),
+    pullreqNoActionJSON = JSON.parse(fs.readFileSync(__dirname + '/fixtures/github-pullreq-no-action.json')),
     bot;
 
 
@@ -57,4 +58,15 @@ exports.testPullRequest = function(test) {
 
 };
 
+exports.testPullRequestNoAction = function(test) {
+
+  githubPlugin({ token: 'foo' }, bot, function() { });
+
+  testUtil.webHookBodyRequest(bot, pullreqNoActionJSON);
+
+  test.ok( bot.say.called == false );
+
+  test.done();
+
+};
 

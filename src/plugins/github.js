@@ -19,6 +19,9 @@ var gitty = {};
 gitty.parser = {
 
   parsePullReq: function(json){
+    if(!json.action){
+        return false;
+    }
     var pullReq = json.pull_request,
         mergable = json.mergeable ? ' (Mergable)' : '';
     message = [
@@ -109,12 +112,16 @@ module.exports = function(config, bot, done) {
   }
 
   bot.registerWebHook('/github', function(json) {
-
+    var msg = false;
     if(json){
       if(json.pusher)
-        bot.say(gitty.parser.parsePush(json));
+        msg = gitty.parser.parsePush(json);
       if(json.pull_request)
-        bot.say(gitty.parser.parsePullReq(json));
+        msg = gitty.parser.parsePullReq(json);
+    }
+
+    if(msg){
+      bot.say(msg);
     }
 
   });
