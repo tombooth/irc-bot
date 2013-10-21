@@ -17,6 +17,7 @@ try {
 
 var irc = require('irc'),
     clientConfig = { autoConnect: false },
+    wwwPort = (process.argv.length > 2 && process.argv[2]) || config.www.port || 80,
     client;
 
 if (config.irc.nick_password) {
@@ -39,8 +40,10 @@ client.connect(3, function() {
   var express = require('express'),
       www = express();
 
+  console.log('Setting up www server on ' + wwwPort);
+
   www.use(express.bodyParser());
-  www.listen(config.www.port || 80);
+  www.listen(wwwPort);
 
   var Bot = require('./src/bot.js'),
       bot = new Bot(
