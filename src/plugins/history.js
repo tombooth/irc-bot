@@ -14,17 +14,26 @@ module.exports = function(config, bot, done) {
       flags: 'a'
     });
 
-  bot.ircClient.addListener('message', function(nick, to, text, message) {
-    
-    var log = JSON.stringify({
-      nick: nick,
-      to: to,
-      text: text,
-      message: message
+  outStream.on('open', function() {
+
+    bot.ircClient.addListener('message', function(nick, to, text, message) {
+      
+      var log = JSON.stringify({
+        nick: nick,
+        to: to,
+        text: text,
+        message: message
+      });
+
+      outStream.write(log + '\n', 'utf8');
+
     });
 
-    outStream.write(log + '\n', 'utf8');
+  });
 
+  outStream.on('error', function(err) {
+    console.error('History writer error:');
+    console.error(err);
   });
 
   done();
